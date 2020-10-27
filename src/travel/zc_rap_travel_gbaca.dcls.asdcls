@@ -1,0 +1,11 @@
+@EndUserText.label: 'Access control for ZC_RAP_TRAVEL_GBACA'
+@MappingRole: true
+define role ZC_RAP_TRAVEL_GBACA {
+    grant
+        select
+            on
+                ZC_RAP_Travel_gbaca
+                    where
+                        inheriting conditions from entity zi_rap_travel_gbaca;
+                        
+}
