@@ -4,7 +4,7 @@ define behavior for ZI_RAP_Travel_GBACA alias Travel
 implementation in class zbp_i_rap_travel_gbaca unique
 persistent table zrap_atrav_gbaca
 lock master
-//authorization master ( instance )
+authorization master ( instance )
 etag master LocalLastChangedAt
 {
   create;
@@ -23,7 +23,7 @@ etag master LocalLastChangedAt
 
   determination setInitialStatus on modify { create; }
   determination calculateTotalPrice on modify { field BookingFee, CurrencyCode; }
-  determination recalculateTravelID on save { create; }
+  determination calculateTravelID on save { create; }
 
   validation validateAgency on save { field AgencyID; create;}
   validation validateCustomer on save { field CustomerID; create;}
@@ -54,7 +54,7 @@ define behavior for ZI_RAP_Booking_gbaca alias Booking
 implementation in class zbp_i_rap_booking_gbaca unique
 persistent table zrap_abook_gbaca
 lock dependent by _Travel
-//authorization dependent by <association>
+authorization dependent by _Travel
 etag master LocalLastChangedAt
 {
   update;
