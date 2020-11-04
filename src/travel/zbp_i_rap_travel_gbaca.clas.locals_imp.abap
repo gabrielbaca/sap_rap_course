@@ -408,8 +408,8 @@ class lhc_travel implementation.
     is_update_requested = cond #( when requested_authorizations-%update              = if_abap_behv=>mk-on or
                                        requested_authorizations-%action-accepttravel = if_abap_behv=>mk-on or
                                        requested_authorizations-%action-rejecttravel = if_abap_behv=>mk-on or
-*                                       requested_authorizations-%action-Prepare      = if_abap_behv=>mk-on OR
-*                                       requested_authorizations-%action-Edit         = if_abap_behv=>mk-on OR
+                                       requested_authorizations-%action-Prepare      = if_abap_behv=>mk-on OR
+                                       requested_authorizations-%action-Edit         = if_abap_behv=>mk-on OR
                                        requested_authorizations-%assoc-_booking      = if_abap_behv=>mk-on
                                   then abap_true else abap_false ).
 
@@ -460,8 +460,8 @@ class lhc_travel implementation.
                       %update              = cond #( when update_granted = abap_true then if_abap_behv=>auth-allowed else if_abap_behv=>auth-unauthorized )
                       %action-accepttravel = cond #( when update_granted = abap_true then if_abap_behv=>auth-allowed else if_abap_behv=>auth-unauthorized )
                       %action-rejecttravel = cond #( when update_granted = abap_true then if_abap_behv=>auth-allowed else if_abap_behv=>auth-unauthorized )
-*                      %action-Prepare      = COND #( WHEN update_granted = abap_true THEN if_abap_behv=>auth-allowed ELSE if_abap_behv=>auth-unauthorized )
-*                      %action-Edit         = COND #( WHEN update_granted = abap_true THEN if_abap_behv=>auth-allowed ELSE if_abap_behv=>auth-unauthorized )
+                      %action-Prepare      = COND #( WHEN update_granted = abap_true THEN if_abap_behv=>auth-allowed ELSE if_abap_behv=>auth-unauthorized )
+                      %action-Edit         = COND #( WHEN update_granted = abap_true THEN if_abap_behv=>auth-allowed ELSE if_abap_behv=>auth-unauthorized )
                       %assoc-_booking      = cond #( when update_granted = abap_true then if_abap_behv=>auth-allowed else if_abap_behv=>auth-unauthorized )
 
                       %delete              = cond #( when delete_granted = abap_true then if_abap_behv=>auth-allowed else if_abap_behv=>auth-unauthorized )
