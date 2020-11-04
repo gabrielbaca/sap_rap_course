@@ -1,6 +1,7 @@
-managed; // implementation in class zbp_i_rap_travel_gbaca unique;
+managed;
 
 define behavior for ZI_RAP_Travel_GBACA alias Travel
+implementation in class zbp_i_rap_travel_gbaca unique
 persistent table zrap_atrav_gbaca
 lock master
 //authorization master ( instance )
@@ -12,6 +13,21 @@ etag master LocalLastChangedAt
   association _Booking { create; }
 
   field ( numbering : managed, readonly ) TravelUUID;
+  field ( readonly ) TravelId, TotalPrice, TravelStatus;
+  field ( readonly ) LastChangedAt, LastChangedBy, CreatedAt, CreatedBy, LocalLastChangedAt;
+  field ( mandatory ) AgencyID, CustomerID;
+
+  action( features : instance ) acceptTravel result [1] $self;
+  action( features : instance ) rejectTravel result [1] $self;
+  internal action recalculateTotalPrice;
+
+  determination setInitialStatus on modify { create; }
+  determination calculateTotalPrice on modify { field BookingFee, CurrencyCode; }
+  determination recalculateTravelID on save { create; }
+
+  validation validateAgency on save { field AgencyID; create;}
+  validation validateCustomer on save { field CustomerID; create;}
+  validation validateDates on save { field BeginDate, EndDate; create;}
 
   mapping for zrap_atrav_gbaca
   {
@@ -35,6 +51,7 @@ etag master LocalLastChangedAt
 }
 
 define behavior for ZI_RAP_Booking_gbaca alias Booking
+implementation in class zbp_i_rap_booking_gbaca unique
 persistent table zrap_abook_gbaca
 lock dependent by _Travel
 //authorization dependent by <association>
@@ -45,7 +62,11 @@ etag master LocalLastChangedAt
   association _Travel;
 
   field ( numbering : managed, readonly ) BookingUUID;
-  field ( readonly ) TravelUUID;
+  field ( readonly ) TravelUUID, BookingID;
+  field ( readonly ) LastChangedBy, CreatedBy, LocalLastChangedAt;
+
+  determination calculateBookingID on modify { create; }
+  determination calculateTotalPrice on modify {field FlightPrice, CurrencyCode;}
 
   mapping for zrap_abook_gbaca
   {
