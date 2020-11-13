@@ -1,0 +1,62 @@
+unmanaged;
+
+define behavior for ZI_RAP_TRAVEL_U_GBACA alias Travel
+implementation in class zbp_i_rap_travel_u_gbaca unique
+//late numbering
+lock master
+etag master Lastchangedat
+{
+  create;
+  update;
+  delete;
+  association _Booking { create; }
+
+  field ( read only ) TravelID;
+  field ( mandatory ) AgencyID, CustomerID, BeginDate, EndDate;
+
+  mapping for /DMO/TRAVEL control zsrap_travel_x_gbaca
+  {
+    travelid = travel_id;
+    agencyid = agency_id;
+    customerid = customer_id;
+    begindate = begin_date;
+    enddate = end_date;
+    bookingfee = booking_fee;
+    totalprice = total_price;
+    currencycode = currency_code;
+    description = description;
+    status = status;
+    createdby = createdby;
+    createdat = createdat;
+    lastchangedby = lastchangedby;
+    lastchangedat = lastchangedat;
+  }
+
+}
+
+define behavior for ZI_RAP_Booking_U_GBACA alias Booking
+implementation in class zbp_i_rap_booking_u_gbaca unique
+//late numbering
+lock dependent by _Travel
+etag dependent by _Travel
+{
+  update;
+  delete;
+  association _Travel;
+
+  field ( read only ) TravelID, BookingID;
+  field ( mandatory ) BookingDate, CustomerID, CarrierID, ConnectionID, FlightDate;
+
+  mapping for /DMO/BOOKING control zsrap_booking_x_gbaca
+  {
+    TravelId = TRAVEL_ID;
+    BookingId = BOOKING_ID;
+    BookingDate = BOOKING_DATE;
+    CustomerId = CUSTOMER_ID;
+    CarrierId = CARRIER_ID;
+    ConnectionId = CONNECTION_ID;
+    FlightDate = FLIGHT_DATE;
+    FlightPrice = FLIGHT_PRICE;
+    CurrencyCode = CURRENCY_CODE;
+  }
+}
