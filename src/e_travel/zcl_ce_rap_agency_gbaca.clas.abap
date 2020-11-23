@@ -5,6 +5,7 @@ class zcl_ce_rap_agency_gbaca definition
 
   public section.
     interfaces if_oo_adt_classrun.
+*    interfaces if_rap_query_provider.
 
     types t_agency_range type range of zz_travel_agency_es5_gbaca-agencyid.
     types t_business_data type table of zz_travel_agency_es5_gbaca.

@@ -1,7 +1,6 @@
-/********** GENERATED on 11/23/2020 at 02:45:07 by CB0000000566**************/
-@OData.entitySet.name: 'Z_TRAVEL_AGENCY_ES5'
-@OData.entityType.name: 'Z_TRAVEL_AGENCY_ES5Type'
-define root abstract entity ZZ_TRAVEL_AGENCY_ES5_GBACA
+@EndUserText.label: 'Agency data from ES5'
+@ObjectModel.query.implementedBy: 'ABAP:ZCL_CE_RAP_AGENCY_GBACA'
+define custom entity ZCE_RAP_AGENCY_GBACA
 {
   key AgencyId       : abap.numc( 6 );
       @OData.property.valueControl: 'Name_vc'
@@ -25,5 +24,4 @@ define root abstract entity ZZ_TRAVEL_AGENCY_ES5_GBACA
       @OData.property.valueControl: 'WebAddress_vc'
       WebAddress     : abap.char( 255 );
       WebAddress_vc  : rap_cp_odata_value_control;
-
 }
