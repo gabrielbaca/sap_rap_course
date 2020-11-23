@@ -165,7 +165,7 @@ class lhc_travel implementation.
       try.
           "skip and top must not be used
           "but an appropriate filter will be provided
-          new zcl_ce_rap_agency_1234( )->get_agencies(
+          new zcl_ce_rap_agency_gbaca( )->get_agencies(
             exporting
               filter_cond    = filter_conditions
               is_data_requested  = abap_true
