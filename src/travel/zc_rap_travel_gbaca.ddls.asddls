@@ -4,16 +4,17 @@
 @Metadata.allowExtensions: true
 
 define root view entity ZC_RAP_Travel_gbaca
-  as projection on ZI_RAP_Travel_gbaca as Travel
+  as projection on ZI_RAP_Travel_GBACA as Travel
 {
   key TravelUUID,
       @Search.defaultSearchElement: true
       TravelID,
-      @Consumption.valueHelpDefinition: [{ entity: { name: '/DMO/I_Agency', element: 'AgencyID'} }]
-      @ObjectModel.text.element: ['AgencyName']
+//      @Consumption.valueHelpDefinition: [{ entity: { name: '/DMO/I_Agency', element: 'AgencyID'} }]
+      @Consumption.valueHelpDefinition: [{ entity: { name: 'ZCE_RAP_AGENCY_GBACA', element: 'AgencyID'} }]
+//      @ObjectModel.text.element: ['AgencyName']
       @Search.defaultSearchElement: true
       AgencyID,
-      _Agency.Name       as AgencyName,
+//      _Agency.Name       as AgencyName,
       @Consumption.valueHelpDefinition: [{ entity: { name: '/DMO/I_Customer', element: 'CustomerID'} }]
       @ObjectModel.text.element: ['CustomerName']
       @Search.defaultSearchElement: true

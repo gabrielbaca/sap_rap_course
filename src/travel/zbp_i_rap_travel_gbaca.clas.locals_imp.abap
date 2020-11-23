@@ -137,22 +137,81 @@ class lhc_travel implementation.
     agencies = corresponding #( travels discarding duplicates mapping agency_id = agencyid except * ).
     delete agencies where agency_id is initial.
 
-    if agencies is not initial.
-      " Check if agency ID exist
-      select from /dmo/agency fields agency_id
-        for all entries in @agencies
-        where agency_id = @agencies-agency_id
-        into table @data(agencies_db).
-    endif.
+**    IF agencies IS NOT INITIAL.
+**      " Check if agency ID exist
+**      SELECT FROM /dmo/agency FIELDS agency_id
+**        FOR ALL ENTRIES IN @agencies
+**        WHERE agency_id = @agencies-agency_id
+**        INTO TABLE @DATA(agencies_db).
+**    ENDIF.
 
-    " Raise msg for non existing and initial agencyID
+
     loop at travels into data(travel).
-      " Clear state messages that might exist
+*      " Clear state messages that might exist
       append value #(  %tky               = travel-%tky
                        %state_area        = 'VALIDATE_AGENCY' )
         to reported-travel.
+    endloop.
 
-      if travel-agencyid is initial or not line_exists( agencies_db[ agency_id = travel-agencyid ] ).
+    data filter_conditions  type if_rap_query_filter=>tt_name_range_pairs .
+    data ranges_table type if_rap_query_filter=>tt_range_option .
+    data business_data type table of zz_travel_agency_es5_gbaca.
+
+    if agencies is not initial.
+
+      ranges_table = value #( for agency in agencies (  sign = 'I' option = 'EQ' low = agency-agency_id ) ).
+      filter_conditions = value #( ( name = 'AGENCYID'  range = ranges_table ) ).
+
+      try.
+          "skip and top must not be used
+          "but an appropriate filter will be provided
+          new zcl_ce_rap_agency_1234( )->get_agencies(
+            exporting
+              filter_cond    = filter_conditions
+              is_data_requested  = abap_true
+              is_count_requested = abap_false
+            importing
+              business_data  = business_data
+            ) .
+
+        catch /iwbep/cx_cp_remote
+              /iwbep/cx_gateway
+              cx_web_http_client_error
+              cx_http_dest_provider_error
+
+       into data(exception).
+
+          data(exception_message) = cl_message_helper=>get_latest_t100_exception( exception )->if_message~get_text( ) .
+
+          loop at travels into travel.
+            append value #( %tky = travel-%tky ) to failed-travel.
+
+            append value #( %tky        = travel-%tky
+                            %state_area = 'VALIDATE_AGENCY'
+                            %msg        =  new_message_with_text( severity = if_abap_behv_message=>severity-error text = exception_message )
+                            %element-agencyid = if_abap_behv=>mk-on )
+              to reported-travel.
+          endloop.
+
+          return.
+
+      endtry.
+
+    endif.
+
+    " Raise msg for non existing and initial agencyID
+**    LOOP AT travels INTO DATA(travel).
+    loop at travels into travel.
+
+
+**      " Clear state messages that might exist
+**      APPEND VALUE #(  %tky               = travel-%tky
+**                       %state_area        = 'VALIDATE_AGENCY' )
+**        TO reported-travel.
+
+**      IF travel-AgencyID IS INITIAL OR NOT line_exists( agencies_db[ agency_id = travel-AgencyID ] ).
+      if travel-agencyid is initial or not line_exists( business_data[ agencyid = travel-agencyid ] ).
+
         append value #( %tky = travel-%tky ) to failed-travel.
 
         append value #( %tky        = travel-%tky
@@ -408,8 +467,8 @@ class lhc_travel implementation.
     is_update_requested = cond #( when requested_authorizations-%update              = if_abap_behv=>mk-on or
                                        requested_authorizations-%action-accepttravel = if_abap_behv=>mk-on or
                                        requested_authorizations-%action-rejecttravel = if_abap_behv=>mk-on or
-                                       requested_authorizations-%action-Prepare      = if_abap_behv=>mk-on OR
-                                       requested_authorizations-%action-Edit         = if_abap_behv=>mk-on OR
+                                       requested_authorizations-%action-prepare      = if_abap_behv=>mk-on or
+                                       requested_authorizations-%action-edit         = if_abap_behv=>mk-on or
                                        requested_authorizations-%assoc-_booking      = if_abap_behv=>mk-on
                                   then abap_true else abap_false ).
 
@@ -460,8 +519,8 @@ class lhc_travel implementation.
                       %update              = cond #( when update_granted = abap_true then if_abap_behv=>auth-allowed else if_abap_behv=>auth-unauthorized )
                       %action-accepttravel = cond #( when update_granted = abap_true then if_abap_behv=>auth-allowed else if_abap_behv=>auth-unauthorized )
                       %action-rejecttravel = cond #( when update_granted = abap_true then if_abap_behv=>auth-allowed else if_abap_behv=>auth-unauthorized )
-                      %action-Prepare      = COND #( WHEN update_granted = abap_true THEN if_abap_behv=>auth-allowed ELSE if_abap_behv=>auth-unauthorized )
-                      %action-Edit         = COND #( WHEN update_granted = abap_true THEN if_abap_behv=>auth-allowed ELSE if_abap_behv=>auth-unauthorized )
+                      %action-prepare      = cond #( when update_granted = abap_true then if_abap_behv=>auth-allowed else if_abap_behv=>auth-unauthorized )
+                      %action-edit         = cond #( when update_granted = abap_true then if_abap_behv=>auth-allowed else if_abap_behv=>auth-unauthorized )
                       %assoc-_booking      = cond #( when update_granted = abap_true then if_abap_behv=>auth-allowed else if_abap_behv=>auth-unauthorized )
 
                       %delete              = cond #( when delete_granted = abap_true then if_abap_behv=>auth-allowed else if_abap_behv=>auth-unauthorized )
