@@ -5,7 +5,7 @@ class zcl_ce_rap_agency_gbaca definition
 
   public section.
     interfaces if_oo_adt_classrun.
-*    interfaces if_rap_query_provider.
+    interfaces if_rap_query_provider.
 
     types t_agency_range type range of zz_travel_agency_es5_gbaca-agencyid.
     types t_business_data type table of zz_travel_agency_es5_gbaca.
@@ -134,5 +134,39 @@ class zcl_ce_rap_agency_gbaca implementation.
 
   endmethod.
 
+
+  method if_rap_query_provider~select.
+    data business_data type t_business_data.
+    data(top)     = io_request->get_paging( )->get_page_size( ).
+    data(skip)    = io_request->get_paging( )->get_offset( ).
+    data(requested_fields)  = io_request->get_requested_elements( ).
+    data(sort_order)    = io_request->get_sort_elements( ).
+    data count type int8.
+    try.
+        data(filter_condition) = io_request->get_filter( )->get_as_ranges( ).
+
+        get_agencies(
+                 exporting
+                   filter_cond        = filter_condition
+                   top                = conv i( top )
+                   skip               = conv i( skip )
+                   is_data_requested  = io_request->is_data_requested( )
+                   is_count_requested = io_request->is_total_numb_of_rec_requested(  )
+                 importing
+                   business_data  = business_data
+                   count     = count
+                 ) .
+
+        if io_request->is_total_numb_of_rec_requested(  ).
+          io_response->set_total_number_of_records( count ).
+        endif.
+        if io_request->is_data_requested(  ).
+          io_response->set_data( business_data ).
+        endif.
+
+      catch cx_root into data(exception).
+        data(exception_message) = cl_message_helper=>get_latest_t100_exception( exception )->if_message~get_longtext( ).
+    endtry.
+  endmethod.
 
 endclass.
