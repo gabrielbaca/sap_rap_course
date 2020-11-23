@@ -74,11 +74,11 @@ class zcm_rap_gbaca definition
     data agencyid type string read-only.
   protected section.
   private section.
-endclass.
+ENDCLASS.
 
 
 
-class zcm_rap_gbaca implementation.
+CLASS ZCM_RAP_GBACA IMPLEMENTATION.
 
 
   method constructor ##ADT_SUPPRESS_GENERATION.
@@ -99,4 +99,4 @@ class zcm_rap_gbaca implementation.
     me->customerid = |{ customerid alpha = out }|.
     me->agencyid = |{ agencyid alpha = out }|.
   endmethod.
-endclass.
+ENDCLASS.

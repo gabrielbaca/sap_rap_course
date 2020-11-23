@@ -17,7 +17,9 @@ ENDCLASS.
 
 
 
-CLASS zcl_generate_travel_demo_data IMPLEMENTATION.
+CLASS ZCL_GENERATE_TRAVEL_DEMO_DATA IMPLEMENTATION.
+
+
   METHOD if_oo_adt_classrun~main.
 
     delete_existing_data( ).
@@ -28,6 +30,7 @@ CLASS zcl_generate_travel_demo_data IMPLEMENTATION.
 
     out->write( 'Travel and booking demo data inserted.').
   ENDMETHOD.
+
 
   METHOD insert_booking_demo_data.
 
@@ -53,7 +56,6 @@ CLASS zcl_generate_travel_demo_data IMPLEMENTATION.
       ).
 
   ENDMETHOD.
-
 
 
   METHOD insert_travel_demo_data.
@@ -88,13 +90,10 @@ CLASS zcl_generate_travel_demo_data IMPLEMENTATION.
   ENDMETHOD.
 
 
-
   METHOD delete_existing_data.
 
     DELETE FROM zrap_atrav_gbaca.
     DELETE FROM zrap_abook_gbaca.
 
   ENDMETHOD.
-
-
 ENDCLASS.

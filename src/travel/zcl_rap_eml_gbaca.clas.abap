@@ -7,11 +7,12 @@ class zcl_rap_eml_gbaca definition
     interfaces if_oo_adt_classrun.
   protected section.
   private section.
-endclass.
+ENDCLASS.
 
 
 
-class zcl_rap_eml_gbaca implementation.
+CLASS ZCL_RAP_EML_GBACA IMPLEMENTATION.
+
 
   method if_oo_adt_classrun~main.
 
@@ -110,5 +111,4 @@ class zcl_rap_eml_gbaca implementation.
 
     out->write( 'Delete done' ).
   endmethod.
-
-endclass.
+ENDCLASS.

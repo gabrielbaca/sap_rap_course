@@ -1,5 +1,7 @@
 class zbp_i_rap_travel_gbaca definition public abstract final for behavior of zi_rap_travel_gbaca.
-endclass.
+ENDCLASS.
 
-class zbp_i_rap_travel_gbaca implementation.
-endclass.
+
+
+CLASS ZBP_I_RAP_TRAVEL_GBACA IMPLEMENTATION.
+ENDCLASS.
